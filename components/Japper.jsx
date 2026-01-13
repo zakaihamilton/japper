@@ -10,7 +10,8 @@ import {
     FileText,
     RefreshCw,
     AlertCircle,
-    Check
+    Check,
+    Filter
 } from 'lucide-react';
 
 // --- Utility Functions ---
@@ -27,6 +28,26 @@ const getNestedValue = (obj, path) => {
     }
 
     return current;
+};
+
+const filterData = (data, filterString) => {
+    if (!filterString || !filterString.trim()) return data;
+
+    const filters = [];
+    const regex = /([\w.-]+)\s*=\s*"([^"]*)"/g;
+    let match;
+    while ((match = regex.exec(filterString)) !== null) {
+        filters.push({ key: match[1], value: match[2] });
+    }
+
+    if (filters.length === 0) return data;
+
+    return data.filter(item => {
+        return filters.every(({ key, value }) => {
+            const itemValue = getNestedValue(item, key);
+            return String(itemValue) === value;
+        });
+    });
 };
 
 // The sample data to help users get started
@@ -59,6 +80,8 @@ export default function App() {
     const [template, setTemplate] = useState(SAMPLE_TEMPLATE);
     const [separator, setSeparator] = useState('\\n'); // Visual representation of separator
     const [parsedData, setParsedData] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
+    const [filterInput, setFilterInput] = useState('');
     const [parseError, setParseError] = useState(null);
     const [output, setOutput] = useState('');
     const [availableKeys, setAvailableKeys] = useState([]);
@@ -115,9 +138,14 @@ export default function App() {
         }
     }, [jsonInput]);
 
+    // Filter data whenever parsedData or filterInput changes
+    useEffect(() => {
+        setFilteredData(filterData(parsedData, filterInput));
+    }, [parsedData, filterInput]);
+
     // Generate Output whenever Data, Template, or Separator changes
     useEffect(() => {
-        if (parsedData.length === 0) {
+        if (filteredData.length === 0) {
             setOutput('');
             return;
         }
@@ -129,7 +157,7 @@ export default function App() {
         else if (separator === ',') actualSeparator = ',';
         else actualSeparator = separator;
 
-        const processed = parsedData.map(item => {
+        const processed = filteredData.map(item => {
             // Regex to find {{ key }} patterns
             return template.replace(/{{(.*?)}}/g, (match, key) => {
                 const trimmedKey = key.trim();
@@ -142,7 +170,7 @@ export default function App() {
         });
 
         setOutput(processed.join(actualSeparator));
-    }, [parsedData, template, separator]);
+    }, [filteredData, template, separator]);
 
     // --- Handlers ---
 
@@ -236,8 +264,21 @@ export default function App() {
                             </div>
                         )}
                     </div>
-                    <div className="px-4 py-2 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 flex justify-between">
-                        <span>{parsedData.length} items detected</span>
+                    <div className="px-4 py-2 bg-slate-50 border-t border-slate-200 flex flex-col gap-2">
+                        <div className="text-xs text-slate-500 flex justify-between">
+                            <span>{parsedData.length} items detected</span>
+                            <span>{filteredData.length} after filter</span>
+                        </div>
+                        <div className="flex items-center gap-2 bg-white border border-slate-300 rounded px-2 py-1">
+                            <Filter className="w-3 h-3 text-slate-400" />
+                            <input
+                                type="text"
+                                value={filterInput}
+                                onChange={(e) => setFilterInput(e.target.value)}
+                                placeholder='Filter: user="abc", role="admin"'
+                                className="w-full text-xs outline-none bg-transparent"
+                            />
+                        </div>
                     </div>
                 </div>
 

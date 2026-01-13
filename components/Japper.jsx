@@ -127,7 +127,7 @@ export default function App() {
                         }
                     });
                 };
-                extractKeys(dataToMap[0]); // Just check the first item for schema
+                dataToMap.forEach(item => extractKeys(item));
                 setAvailableKeys(Array.from(keys));
             }
 

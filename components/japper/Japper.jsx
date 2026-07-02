@@ -10,6 +10,7 @@ import {
 } from '../../lib/japperConstants';
 import { filterData, renderOutput } from '../../lib/japperUtils';
 import JapperHeader from './JapperHeader';
+import PanelGroup from './PanelGroup';
 import JsonInputPanel from './JsonInputPanel';
 import TemplatePanel from './TemplatePanel';
 import OutputPanel from './OutputPanel';
@@ -32,7 +33,6 @@ export default function Japper() {
     const [inputSource, setInputSource] = useState('editor');
     const [loadedFile, setLoadedFile] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [isDragOver, setIsDragOver] = useState(false);
 
     const workerRef = useRef(null);
     const workerRequestIdRef = useRef(0);
@@ -168,23 +168,6 @@ export default function Japper() {
         }
     };
 
-    const handleDragOver = (event) => {
-        event.preventDefault();
-        setIsDragOver(true);
-    };
-
-    const handleDragLeave = (event) => {
-        event.preventDefault();
-        setIsDragOver(false);
-    };
-
-    const handleDrop = (event) => {
-        event.preventDefault();
-        setIsDragOver(false);
-        const file = event.dataTransfer.files?.[0];
-        if (file) handleFileLoad(file);
-    };
-
     const handleCopy = () => {
         const textArea = document.createElement('textarea');
         textArea.value = output;
@@ -241,7 +224,7 @@ export default function Japper() {
         <div className={styles.shell}>
             <JapperHeader onLoadSample={loadSample} />
 
-            <main className={styles.main}>
+            <PanelGroup className={styles.main} columns={['input', 'template', 'output']}>
                 <JsonInputPanel
                     jsonInput={jsonInput}
                     onJsonInputChange={setJsonInput}
@@ -258,13 +241,9 @@ export default function Japper() {
                     loadedFile={loadedFile}
                     resolvedPath={resolvedPath}
                     isLoading={isLoading}
-                    isDragOver={isDragOver}
                     showAutoDetectedHint={showAutoDetectedHint}
                     onFileLoad={handleFileLoad}
                     onClear={resetInput}
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
                 />
 
                 <TemplatePanel
@@ -283,7 +262,7 @@ export default function Japper() {
                     onCopy={handleCopy}
                     onDownload={handleDownload}
                 />
-            </main>
+            </PanelGroup>
         </div>
     );
 }

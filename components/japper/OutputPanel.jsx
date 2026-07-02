@@ -1,5 +1,6 @@
 import { FileText, Copy, Download, Check } from 'lucide-react';
 import Tooltip from './Tooltip';
+import Panel from './Panel';
 import styles from './OutputPanel.module.css';
 
 export default function OutputPanel({
@@ -10,16 +11,18 @@ export default function OutputPanel({
     onDownload,
 }) {
     return (
-        <div className={styles.panel}>
-            <div className={styles.panelHeader}>
-                <div className={styles.panelTitle}>
-                    <FileText className={styles.panelIcon} />
-                    Output Result
-                    {outputTruncated && (
-                        <span className={styles.truncatedBadge}>(truncated preview)</span>
-                    )}
-                </div>
-                <div className={styles.headerActions}>
+        <Panel
+            panelId="output"
+            title="Output Result"
+            icon={FileText}
+            titleExtra={outputTruncated && (
+                <span className={styles.truncatedBadge}>(truncated preview)</span>
+            )}
+            collapseEdge="right"
+            variant="output"
+            bodyClassName={styles.body}
+            headerActions={(
+                <>
                     <Tooltip content="Copy to clipboard">
                         <button
                             type="button"
@@ -38,16 +41,15 @@ export default function OutputPanel({
                             <Download className={styles.icon} />
                         </button>
                     </Tooltip>
-                </div>
-            </div>
-            <div className={styles.body}>
-                <textarea
-                    className={styles.textarea}
-                    value={outputPreview}
-                    readOnly
-                    placeholder="Result will appear here..."
-                />
-            </div>
-        </div>
+                </>
+            )}
+        >
+            <textarea
+                className={styles.textarea}
+                value={outputPreview}
+                readOnly
+                placeholder="Result will appear here..."
+            />
+        </Panel>
     );
 }

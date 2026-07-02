@@ -1,0 +1,235 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  flex: 1;
+  min-height: 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.panelOutput {
+  background: #f8fafc;
+}
+
+@media (min-width: 1024px) {
+  .panel {
+    border-bottom: none;
+    border-right: 1px solid #e2e8f0;
+  }
+
+  .panelOutput {
+    border-right: none;
+  }
+}
+
+.panelCollapsed {
+  flex: 0 0 auto;
+  min-height: auto;
+  height: auto;
+}
+
+.panelHeader {
+  height: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  background: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+.panelHeaderCollapsed {
+  cursor: pointer;
+}
+
+@media (max-width: 1023px) {
+  .panel:not(.panelCollapsed) .panelHeader {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .panel:not(.panelCollapsed) .panelTitle {
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+  }
+
+  .panel:not(.panelCollapsed) .headerActions {
+    flex-direction: row;
+  }
+
+  .panelCollapsed .panelHeader {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .panelCollapsed .panelTitle {
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+  }
+
+  .panelCollapsed .headerActions {
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 1024px) {
+  .panel:not(.panelCollapsed) .panelHeader {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .panel:not(.panelCollapsed) .panelTitle {
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+  }
+
+  .panel:not(.panelCollapsed) .headerActions {
+    flex-direction: row;
+  }
+
+  .panelCollapsed .panelHeader {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 0.25rem;
+    width: 2.75rem;
+    height: 100%;
+    min-height: 0;
+    border-bottom: none;
+  }
+
+  .panelCollapsed .panelTitle {
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    white-space: normal;
+    text-overflow: unset;
+  }
+
+  .panelCollapsed .panelTitleText {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 100%;
+  }
+
+  .panelCollapsed .headerActions {
+    flex-direction: column;
+  }
+
+  .panelCollapsed {
+    height: 100%;
+  }
+}
+
+.panelTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #334155;
+  font-weight: 600;
+  font-size: 0.875rem;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.panelTitleText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.panelIcon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.collapseButton {
+  padding: 0.25rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #64748b;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.collapseButton:hover {
+  color: #334155;
+  background: #e2e8f0;
+}
+
+.collapseIcon {
+  width: 1rem;
+  height: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.collapseIconRotated {
+  transform: rotate(180deg);
+}
+
+.collapseIconDesktop {
+  display: none;
+}
+
+.collapseIconMobile {
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  .collapseIconDesktop {
+    display: block;
+  }
+
+  .collapseIconMobile {
+    display: none;
+  }
+}
+
+.body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.footer {
+  padding: 0.5rem 1rem;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}

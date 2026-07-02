@@ -9,14 +9,14 @@
 
 .main {
   flex: 1;
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   height: calc(100vh - 76px);
 }
 
 @media (min-width: 1024px) {
   .main {
-    grid-template-columns: repeat(12, 1fr);
+    display: grid;
   }
 }

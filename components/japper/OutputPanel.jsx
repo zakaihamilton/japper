@@ -5,6 +5,7 @@ import Tooltip from './Tooltip';
 
 export default function OutputPanel({
     outputPreview,
+    outputLineCount,
     outputTruncated,
     copied,
     onCopy,
@@ -16,9 +17,16 @@ export default function OutputPanel({
             title="Output Result"
             icon={FileText}
             titleExtra={
-                outputTruncated && (
-                    <span className={styles.truncatedBadge}>(truncated preview)</span>
-                )
+                <>
+                    {outputLineCount > 0 && (
+                        <span className={styles.lineCount}>
+                            {outputLineCount} {outputLineCount === 1 ? 'line' : 'lines'}
+                        </span>
+                    )}
+                    {outputTruncated && (
+                        <span className={styles.truncatedBadge}>(truncated preview)</span>
+                    )}
+                </>
             }
             collapseEdge="right"
             variant="output"

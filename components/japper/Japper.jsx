@@ -214,6 +214,7 @@ export default function Japper() {
     const outputPreview = outputTruncated
         ? `${output.slice(0, OUTPUT_PREVIEW_LIMIT)}\n\n... Output truncated — use Download for full result`
         : output;
+    const outputLineCount = output ? output.split('\n').length : 0;
 
     const showAutoDetectedHint =
         !jsonPath.trim() &&
@@ -258,6 +259,7 @@ export default function Japper() {
 
                 <OutputPanel
                     outputPreview={outputPreview}
+                    outputLineCount={outputLineCount}
                     outputTruncated={outputTruncated}
                     copied={copied}
                     onCopy={handleCopy}

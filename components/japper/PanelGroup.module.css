@@ -26,11 +26,21 @@
     background-color: #e2e8f0;
 }
 
+.resizeHandleCollapsedAdjacent {
+    z-index: 10;
+    padding: 0 10px;
+    margin: 0 -10px;
+}
+
 @media (min-width: 1024px) {
     .resizeHandle {
         display: block;
         position: relative;
         z-index: 2;
         align-self: stretch;
+    }
+
+    .resizeHandleCollapsedAdjacent {
+        z-index: 10;
     }
 }

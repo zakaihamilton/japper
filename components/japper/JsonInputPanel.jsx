@@ -110,28 +110,30 @@ export default function JsonInputPanel({
                             Auto-detected: {formatResolvedPath(resolvedPath)}
                         </p>
                     )}
-                    <div className={styles.filterRow}>
+                    <form
+                        className={styles.filterRow}
+                        onSubmit={(event) => {
+                            event.preventDefault();
+                            onApplyFilter();
+                        }}
+                    >
                         <div className={styles.fieldRow}>
                             <Filter className={styles.fieldIcon} />
                             <input
                                 type="text"
                                 value={filterInput}
                                 onChange={(e) => onFilterInputChange(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') onApplyFilter();
-                                }}
                                 placeholder='Filter: user="abc", role="admin"'
                                 className={`${styles.fieldInput} ${styles.fieldInputPlain}`}
                             />
                         </div>
                         <button
-                            type="button"
-                            onClick={onApplyFilter}
+                            type="submit"
                             className={`${styles.applyButton} ${hasPendingFilter ? styles.applyButtonPending : ''}`}
                         >
                             Apply
                         </button>
-                    </div>
+                    </form>
                 </>
             }
         >

@@ -94,11 +94,43 @@ function buildGridTemplate(containerWidth, columns, collapsedPanels, panelWidths
     };
 }
 
-function ResizeHandle({ disabled, isActive, onPointerDown }) {
+function getResizeTargets(handleIndex, columns, collapsedPanels) {
+    const leftIndex = handleIndex;
+    const rightIndex = handleIndex + 1;
+    const leftCollapsed = collapsedPanels[columns[leftIndex]];
+    const rightCollapsed = collapsedPanels[columns[rightIndex]];
+
+    if (!leftCollapsed && !rightCollapsed) {
+        return { mode: 'pair', leftIndex, rightIndex };
+    }
+
+    if (leftCollapsed && !rightCollapsed) {
+        for (let index = leftIndex - 1; index >= 0; index -= 1) {
+            if (!collapsedPanels[columns[index]]) {
+                return { mode: 'pair', leftIndex: index, rightIndex };
+            }
+        }
+        return { mode: 'single', index: rightIndex, sign: -1 };
+    }
+
+    if (!leftCollapsed && rightCollapsed) {
+        for (let index = rightIndex + 1; index < columns.length; index += 1) {
+            if (!collapsedPanels[columns[index]]) {
+                return { mode: 'pair', leftIndex, rightIndex: index };
+            }
+        }
+        return { mode: 'single', index: leftIndex, sign: 1 };
+    }
+
+    return null;
+}
+
+function ResizeHandle({ disabled, isActive, collapsedAdjacent, onPointerDown }) {
     return (
         <div
             className={[
                 styles.resizeHandle,
+                collapsedAdjacent ? styles.resizeHandleCollapsedAdjacent : '',
                 isActive ? styles.resizeHandleActive : '',
                 disabled ? styles.resizeHandleDisabled : '',
             ]
@@ -188,18 +220,37 @@ export default function PanelGroup({ columns, children, className = '' }) {
                 return;
             }
 
-            const leftIndex = dragState.handleIndex;
-            const rightIndex = dragState.handleIndex + 1;
-            const leftId = columns[leftIndex];
-            const rightId = columns[rightIndex];
+            const leftId = columns[dragState.handleIndex];
+            const rightId = columns[dragState.handleIndex + 1];
 
-            if (collapsedPanels[leftId] || collapsedPanels[rightId]) {
+            if (collapsedPanels[leftId] && collapsedPanels[rightId]) {
+                return;
+            }
+
+            const resizeTargets = getResizeTargets(dragState.handleIndex, columns, collapsedPanels);
+            if (!resizeTargets) {
                 return;
             }
 
             const delta = event.clientX - dragState.startX;
-            const nextLeft = dragState.startWidths[leftIndex] + delta;
-            const nextRight = dragState.startWidths[rightIndex] - delta;
+
+            if (resizeTargets.mode === 'single') {
+                const nextWidth =
+                    dragState.startWidths[resizeTargets.index] + resizeTargets.sign * delta;
+                if (nextWidth < MIN_PANEL_WIDTH_PX) {
+                    return;
+                }
+
+                setPanelWidths((prev) => {
+                    const next = [...prev];
+                    next[resizeTargets.index] = nextWidth;
+                    return next;
+                });
+                return;
+            }
+
+            const nextLeft = dragState.startWidths[resizeTargets.leftIndex] + delta;
+            const nextRight = dragState.startWidths[resizeTargets.rightIndex] - delta;
 
             if (nextLeft < MIN_PANEL_WIDTH_PX || nextRight < MIN_PANEL_WIDTH_PX) {
                 return;
@@ -207,8 +258,8 @@ export default function PanelGroup({ columns, children, className = '' }) {
 
             setPanelWidths((prev) => {
                 const next = [...prev];
-                next[leftIndex] = nextLeft;
-                next[rightIndex] = nextRight;
+                next[resizeTargets.leftIndex] = nextLeft;
+                next[resizeTargets.rightIndex] = nextRight;
                 return next;
             });
         },
@@ -239,7 +290,7 @@ export default function PanelGroup({ columns, children, className = '' }) {
 
             const leftId = columns[handleIndex];
             const rightId = columns[handleIndex + 1];
-            if (collapsedPanels[leftId] || collapsedPanels[rightId]) {
+            if (collapsedPanels[leftId] && collapsedPanels[rightId]) {
                 return;
             }
 
@@ -275,12 +326,14 @@ export default function PanelGroup({ columns, children, className = '' }) {
         if (index < childArray.length - 1) {
             const leftId = columns[index];
             const rightId = columns[index + 1];
-            const disabled = collapsedPanels[leftId] || collapsedPanels[rightId];
+            const disabled = collapsedPanels[leftId] && collapsedPanels[rightId];
+            const collapsedAdjacent = collapsedPanels[leftId] || collapsedPanels[rightId];
 
             items.push(
                 <ResizeHandle
                     key={`resize-handle-${columns[index]}-${columns[index + 1]}`}
                     disabled={disabled}
+                    collapsedAdjacent={collapsedAdjacent}
                     isActive={activeHandle === index}
                     onPointerDown={(event) => startDrag(index, event)}
                 />,

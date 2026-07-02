@@ -22,6 +22,7 @@ export default function Japper() {
     const [parsedData, setParsedData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
     const [filterInput, setFilterInput] = useState('');
+    const [appliedFilter, setAppliedFilter] = useState('');
     const [jsonPath, setJsonPath] = useState('');
     const [resolvedPath, setResolvedPath] = useState('');
     const [parseError, setParseError] = useState(null);
@@ -108,8 +109,12 @@ export default function Japper() {
     }, [jsonPath, inputSource, parseInWorker]);
 
     useEffect(() => {
-        setFilteredData(filterData(parsedData, filterInput));
-    }, [parsedData, filterInput]);
+        setFilteredData(filterData(parsedData, appliedFilter));
+    }, [parsedData, appliedFilter]);
+
+    const handleApplyFilter = () => {
+        setAppliedFilter(filterInput);
+    };
 
     useEffect(() => {
         if (filteredData.length === 0) {
@@ -130,6 +135,8 @@ export default function Japper() {
         setResolvedPath('');
         setParsedData([]);
         setAvailableKeys([]);
+        setFilterInput('');
+        setAppliedFilter('');
         setIsLoading(false);
     };
 
@@ -242,6 +249,8 @@ export default function Japper() {
                     onJsonPathChange={setJsonPath}
                     filterInput={filterInput}
                     onFilterInputChange={setFilterInput}
+                    onApplyFilter={handleApplyFilter}
+                    hasPendingFilter={filterInput !== appliedFilter}
                     parseError={parseError}
                     parsedDataCount={parsedData.length}
                     filteredDataCount={filteredData.length}

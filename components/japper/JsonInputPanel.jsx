@@ -9,6 +9,7 @@ import {
     Route,
 } from 'lucide-react';
 import { formatFileSize, formatResolvedPath } from '../../lib/japperUtils';
+import Tooltip from './Tooltip';
 import styles from './JsonInputPanel.module.css';
 
 export default function JsonInputPanel({
@@ -18,6 +19,8 @@ export default function JsonInputPanel({
     onJsonPathChange,
     filterInput,
     onFilterInputChange,
+    onApplyFilter,
+    hasPendingFilter,
     parseError,
     parsedDataCount,
     filteredDataCount,
@@ -81,9 +84,11 @@ export default function JsonInputPanel({
                     <div className={styles.fileSummaryWrap}>
                         <div className={styles.fileSummaryCard}>
                             <FileJson className={styles.fileSummaryIcon} />
-                            <p className={styles.fileName} title={loadedFile.name}>
-                                {loadedFile.name}
-                            </p>
+                            <Tooltip content={loadedFile.name}>
+                                <p className={`${styles.fileName} ${styles.fileNameTooltip}`}>
+                                    {loadedFile.name}
+                                </p>
+                            </Tooltip>
                             <p className={styles.fileSize}>
                                 {formatFileSize(loadedFile.size)}
                             </p>
@@ -150,15 +155,27 @@ export default function JsonInputPanel({
                         Auto-detected: {formatResolvedPath(resolvedPath)}
                     </p>
                 )}
-                <div className={styles.fieldRow}>
-                    <Filter className={styles.fieldIcon} />
-                    <input
-                        type="text"
-                        value={filterInput}
-                        onChange={(e) => onFilterInputChange(e.target.value)}
-                        placeholder='Filter: user="abc", role="admin"'
-                        className={`${styles.fieldInput} ${styles.fieldInputPlain}`}
-                    />
+                <div className={styles.filterRow}>
+                    <div className={styles.fieldRow}>
+                        <Filter className={styles.fieldIcon} />
+                        <input
+                            type="text"
+                            value={filterInput}
+                            onChange={(e) => onFilterInputChange(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') onApplyFilter();
+                            }}
+                            placeholder='Filter: user="abc", role="admin"'
+                            className={`${styles.fieldInput} ${styles.fieldInputPlain}`}
+                        />
+                    </div>
+                    <button
+                        type="button"
+                        onClick={onApplyFilter}
+                        className={`${styles.applyButton} ${hasPendingFilter ? styles.applyButtonPending : ''}`}
+                    >
+                        Apply
+                    </button>
                 </div>
             </div>
         </div>

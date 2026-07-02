@@ -1,4 +1,5 @@
 import { FileText, Copy, Download, Check } from 'lucide-react';
+import Tooltip from './Tooltip';
 import styles from './OutputPanel.module.css';
 
 export default function OutputPanel({
@@ -19,22 +20,24 @@ export default function OutputPanel({
                     )}
                 </div>
                 <div className={styles.headerActions}>
-                    <button
-                        type="button"
-                        onClick={onCopy}
-                        className={`${styles.iconButton} ${copied ? styles.iconButtonCopied : ''}`}
-                        title="Copy to clipboard"
-                    >
-                        {copied ? <Check className={styles.icon} /> : <Copy className={styles.icon} />}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={onDownload}
-                        className={styles.iconButton}
-                        title="Download"
-                    >
-                        <Download className={styles.icon} />
-                    </button>
+                    <Tooltip content="Copy to clipboard">
+                        <button
+                            type="button"
+                            onClick={onCopy}
+                            className={`${styles.iconButton} ${copied ? styles.iconButtonCopied : ''}`}
+                        >
+                            {copied ? <Check className={styles.icon} /> : <Copy className={styles.icon} />}
+                        </button>
+                    </Tooltip>
+                    <Tooltip content="Download">
+                        <button
+                            type="button"
+                            onClick={onDownload}
+                            className={styles.iconButton}
+                        >
+                            <Download className={styles.icon} />
+                        </button>
+                    </Tooltip>
                 </div>
             </div>
             <div className={styles.body}>

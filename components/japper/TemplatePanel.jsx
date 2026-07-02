@@ -1,4 +1,5 @@
 import { Code } from 'lucide-react';
+import Tooltip from './Tooltip';
 import styles from './TemplatePanel.module.css';
 
 export default function TemplatePanel({
@@ -44,15 +45,15 @@ export default function TemplatePanel({
                             <span className={styles.keysEmpty}>Enter valid JSON to see keys</span>
                         ) : (
                             availableKeys.map((key) => (
-                                <button
-                                    key={key}
-                                    type="button"
-                                    onClick={() => onInsertKey(key)}
-                                    className={styles.keyButton}
-                                    title={`Insert {{${key}}}`}
-                                >
-                                    {key}
-                                </button>
+                                <Tooltip key={key} content={`Insert {{${key}}}`}>
+                                    <button
+                                        type="button"
+                                        onClick={() => onInsertKey(key)}
+                                        className={styles.keyButton}
+                                    >
+                                        {key}
+                                    </button>
+                                </Tooltip>
                             ))
                         )}
                     </div>

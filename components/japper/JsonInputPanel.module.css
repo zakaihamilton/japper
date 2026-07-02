@@ -143,6 +143,10 @@
   margin: 0;
 }
 
+.fileNameTooltip {
+  width: 100%;
+}
+
 .fileSize {
   font-size: 0.875rem;
   color: #64748b;
@@ -279,6 +283,37 @@
 
 .fieldInputPlain {
   font-family: inherit;
+}
+
+.filterRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filterRow .fieldRow {
+  flex: 1;
+}
+
+.applyButton {
+  flex-shrink: 0;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #ffffff;
+  background: #4f46e5;
+  border: 1px solid #4338ca;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.applyButton:hover {
+  background: #4338ca;
+}
+
+.applyButtonPending {
+  box-shadow: 0 0 0 2px rgb(129 140 248 / 0.35);
 }
 
 .autoDetectHint {

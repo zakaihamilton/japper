@@ -1,17 +1,17 @@
 'use client';
 
 import {
+    ChevronDown,
+    FoldHorizontal,
     PanelLeftClose,
     PanelLeftOpen,
     PanelRightClose,
     PanelRightOpen,
-    ChevronDown,
-    ChevronLeft,
-    ChevronRight,
+    UnfoldHorizontal,
 } from 'lucide-react';
-import Tooltip from './Tooltip';
-import { usePanelGroup } from './PanelGroup';
 import styles from './Panel.module.css';
+import { usePanelGroup } from './PanelGroup';
+import Tooltip from './Tooltip';
 
 function CollapseToggleIcon({ collapseEdge, isCollapsed }) {
     if (collapseEdge === 'left') {
@@ -20,9 +20,15 @@ function CollapseToggleIcon({ collapseEdge, isCollapsed }) {
                 <ChevronDown
                     className={`${styles.collapseIcon} ${styles.collapseIconMobile} ${isCollapsed ? '' : styles.collapseIconRotated}`}
                 />
-                {isCollapsed
-                    ? <PanelLeftOpen className={`${styles.collapseIcon} ${styles.collapseIconDesktop}`} />
-                    : <PanelLeftClose className={`${styles.collapseIcon} ${styles.collapseIconDesktop}`} />}
+                {isCollapsed ? (
+                    <PanelLeftOpen
+                        className={`${styles.collapseIcon} ${styles.collapseIconDesktop}`}
+                    />
+                ) : (
+                    <PanelLeftClose
+                        className={`${styles.collapseIcon} ${styles.collapseIconDesktop}`}
+                    />
+                )}
             </>
         );
     }
@@ -33,9 +39,15 @@ function CollapseToggleIcon({ collapseEdge, isCollapsed }) {
                 <ChevronDown
                     className={`${styles.collapseIcon} ${styles.collapseIconMobile} ${isCollapsed ? '' : styles.collapseIconRotated}`}
                 />
-                {isCollapsed
-                    ? <PanelRightOpen className={`${styles.collapseIcon} ${styles.collapseIconDesktop}`} />
-                    : <PanelRightClose className={`${styles.collapseIcon} ${styles.collapseIconDesktop}`} />}
+                {isCollapsed ? (
+                    <PanelRightOpen
+                        className={`${styles.collapseIcon} ${styles.collapseIconDesktop}`}
+                    />
+                ) : (
+                    <PanelRightClose
+                        className={`${styles.collapseIcon} ${styles.collapseIconDesktop}`}
+                    />
+                )}
             </>
         );
     }
@@ -45,9 +57,15 @@ function CollapseToggleIcon({ collapseEdge, isCollapsed }) {
             <ChevronDown
                 className={`${styles.collapseIcon} ${styles.collapseIconMobile} ${isCollapsed ? '' : styles.collapseIconRotated}`}
             />
-            {isCollapsed
-                ? <ChevronRight className={`${styles.collapseIcon} ${styles.collapseIconDesktop}`} />
-                : <ChevronLeft className={`${styles.collapseIcon} ${styles.collapseIconDesktop}`} />}
+            {isCollapsed ? (
+                <UnfoldHorizontal
+                    className={`${styles.collapseIcon} ${styles.collapseIconDesktop}`}
+                />
+            ) : (
+                <FoldHorizontal
+                    className={`${styles.collapseIcon} ${styles.collapseIconDesktop}`}
+                />
+            )}
         </>
     );
 }
@@ -84,7 +102,9 @@ export default function Panel({
         variant === 'output' ? styles.panelOutput : '',
         isCollapsed ? styles.panelCollapsed : '',
         className,
-    ].filter(Boolean).join(' ');
+    ]
+        .filter(Boolean)
+        .join(' ');
 
     return (
         <div
@@ -95,15 +115,19 @@ export default function Panel({
         >
             <div
                 className={`${styles.panelHeader} ${isCollapsed ? styles.panelHeaderCollapsed : ''}`}
-                onClick={handleHeaderClick}
+                onClick={isCollapsed ? handleHeaderClick : undefined}
                 role={isCollapsed ? 'button' : undefined}
                 tabIndex={isCollapsed ? 0 : undefined}
-                onKeyDown={isCollapsed ? (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        toggleCollapse();
-                    }
-                } : undefined}
+                onKeyDown={
+                    isCollapsed
+                        ? (e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                  e.preventDefault();
+                                  toggleCollapse();
+                              }
+                          }
+                        : undefined
+                }
             >
                 <div className={styles.panelTitle}>
                     {Icon && <Icon className={styles.panelIcon} />}
@@ -120,7 +144,10 @@ export default function Panel({
                             aria-expanded={!isCollapsed}
                             aria-label={isCollapsed ? 'Expand panel' : 'Collapse panel'}
                         >
-                            <CollapseToggleIcon collapseEdge={collapseEdge} isCollapsed={isCollapsed} />
+                            <CollapseToggleIcon
+                                collapseEdge={collapseEdge}
+                                isCollapsed={isCollapsed}
+                            />
                         </button>
                     </Tooltip>
                 </div>

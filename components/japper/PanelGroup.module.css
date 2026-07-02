@@ -1,0 +1,36 @@
+.panelGroup {
+    position: relative;
+}
+
+.resizeHandle {
+    display: none;
+    flex-shrink: 0;
+    touch-action: none;
+    background: #e2e8f0;
+    cursor: col-resize;
+    transition: background-color 0.15s ease;
+    box-sizing: content-box;
+    padding: 0 3px;
+    margin: 0 -3px;
+    background-clip: content-box;
+}
+
+.resizeHandle:hover,
+.resizeHandleActive {
+    background-color: #94a3b8;
+}
+
+.resizeHandleDisabled {
+    cursor: default;
+    pointer-events: none;
+    background-color: #e2e8f0;
+}
+
+@media (min-width: 1024px) {
+    .resizeHandle {
+        display: block;
+        position: relative;
+        z-index: 2;
+        align-self: stretch;
+    }
+}

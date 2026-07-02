@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './Tooltip.module.css';
 
@@ -24,8 +24,8 @@ function clampPosition(triggerRect, tooltipRect) {
             VIEWPORT_PADDING,
             Math.min(
                 triggerRect.top - tooltipRect.height - TOOLTIP_OFFSET,
-                viewportHeight - tooltipRect.height - VIEWPORT_PADDING
-            )
+                viewportHeight - tooltipRect.height - VIEWPORT_PADDING,
+            ),
         );
         placement = 'top';
     }
@@ -33,7 +33,7 @@ function clampPosition(triggerRect, tooltipRect) {
     let left = triggerRect.left + triggerRect.width / 2 - tooltipRect.width / 2;
     left = Math.max(
         VIEWPORT_PADDING,
-        Math.min(left, viewportWidth - tooltipRect.width - VIEWPORT_PADDING)
+        Math.min(left, viewportWidth - tooltipRect.width - VIEWPORT_PADDING),
     );
 
     return { top, left, placement };
@@ -66,7 +66,7 @@ export default function Tooltip({ content, children }) {
     useLayoutEffect(() => {
         if (!visible) return;
         updatePosition();
-    }, [visible, content, updatePosition]);
+    }, [visible, updatePosition]);
 
     useEffect(() => {
         if (!visible) return;
@@ -97,17 +97,18 @@ export default function Tooltip({ content, children }) {
             >
                 {children}
             </span>
-            {visible && createPortal(
-                <span
-                    ref={tooltipRef}
-                    role="tooltip"
-                    className={styles.tooltip}
-                    style={{ top: position.top, left: position.left }}
-                >
-                    {content}
-                </span>,
-                document.body
-            )}
+            {visible &&
+                createPortal(
+                    <span
+                        ref={tooltipRef}
+                        role="tooltip"
+                        className={styles.tooltip}
+                        style={{ top: position.top, left: position.left }}
+                    >
+                        {content}
+                    </span>,
+                    document.body,
+                )}
         </>
     );
 }

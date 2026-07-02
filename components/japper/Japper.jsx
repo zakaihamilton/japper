@@ -1,20 +1,20 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { resolveDataArray } from '../../lib/parseJson';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-    TEXTAREA_FILE_LIMIT,
     OUTPUT_PREVIEW_LIMIT,
     SAMPLE_JSON,
     SAMPLE_TEMPLATE,
+    TEXTAREA_FILE_LIMIT,
 } from '../../lib/japperConstants';
 import { filterData, renderOutput } from '../../lib/japperUtils';
-import JapperHeader from './JapperHeader';
-import PanelGroup from './PanelGroup';
-import JsonInputPanel from './JsonInputPanel';
-import TemplatePanel from './TemplatePanel';
-import OutputPanel from './OutputPanel';
+import { resolveDataArray } from '../../lib/parseJson';
 import styles from './Japper.module.css';
+import JapperHeader from './JapperHeader';
+import JsonInputPanel from './JsonInputPanel';
+import OutputPanel from './OutputPanel';
+import PanelGroup from './PanelGroup';
+import TemplatePanel from './TemplatePanel';
 
 export default function Japper() {
     const [jsonInput, setJsonInput] = useState(SAMPLE_JSON);
@@ -50,7 +50,7 @@ export default function Japper() {
 
     useEffect(() => {
         workerRef.current = new Worker(
-            new URL('../../workers/parse-json.worker.js', import.meta.url)
+            new URL('../../workers/parse-json.worker.js', import.meta.url),
         );
 
         workerRef.current.onmessage = (event) => {
@@ -215,10 +215,11 @@ export default function Japper() {
         ? `${output.slice(0, OUTPUT_PREVIEW_LIMIT)}\n\n... Output truncated — use Download for full result`
         : output;
 
-    const showAutoDetectedHint = !jsonPath.trim()
-        && resolvedPath !== null
-        && resolvedPath !== undefined
-        && (parsedData.length > 0 || inputSource === 'file');
+    const showAutoDetectedHint =
+        !jsonPath.trim() &&
+        resolvedPath !== null &&
+        resolvedPath !== undefined &&
+        (parsedData.length > 0 || inputSource === 'file');
 
     return (
         <div className={styles.shell}>

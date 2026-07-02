@@ -1,7 +1,7 @@
 import { Code } from 'lucide-react';
-import Tooltip from './Tooltip';
 import Panel from './Panel';
 import styles from './TemplatePanel.module.css';
+import Tooltip from './Tooltip';
 
 export default function TemplatePanel({
     template,
@@ -17,7 +17,7 @@ export default function TemplatePanel({
             title="Template Pattern"
             icon={Code}
             collapseEdge="center"
-            headerActions={(
+            headerActions={
                 <div className={styles.separatorControl}>
                     <span className={styles.separatorLabel}>Join with:</span>
                     <input
@@ -28,7 +28,7 @@ export default function TemplatePanel({
                         placeholder="\n"
                     />
                 </div>
-            )}
+            }
             bodyClassName={styles.body}
         >
             <textarea

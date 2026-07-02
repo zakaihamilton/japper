@@ -1,7 +1,7 @@
-import { FileText, Copy, Download, Check } from 'lucide-react';
-import Tooltip from './Tooltip';
-import Panel from './Panel';
+import { Check, Copy, Download, FileText } from 'lucide-react';
 import styles from './OutputPanel.module.css';
+import Panel from './Panel';
+import Tooltip from './Tooltip';
 
 export default function OutputPanel({
     outputPreview,
@@ -15,13 +15,15 @@ export default function OutputPanel({
             panelId="output"
             title="Output Result"
             icon={FileText}
-            titleExtra={outputTruncated && (
-                <span className={styles.truncatedBadge}>(truncated preview)</span>
-            )}
+            titleExtra={
+                outputTruncated && (
+                    <span className={styles.truncatedBadge}>(truncated preview)</span>
+                )
+            }
             collapseEdge="right"
             variant="output"
             bodyClassName={styles.body}
-            headerActions={(
+            headerActions={
                 <>
                     <Tooltip content="Copy to clipboard">
                         <button
@@ -29,20 +31,20 @@ export default function OutputPanel({
                             onClick={onCopy}
                             className={`${styles.iconButton} ${copied ? styles.iconButtonCopied : ''}`}
                         >
-                            {copied ? <Check className={styles.icon} /> : <Copy className={styles.icon} />}
+                            {copied ? (
+                                <Check className={styles.icon} />
+                            ) : (
+                                <Copy className={styles.icon} />
+                            )}
                         </button>
                     </Tooltip>
                     <Tooltip content="Download">
-                        <button
-                            type="button"
-                            onClick={onDownload}
-                            className={styles.iconButton}
-                        >
+                        <button type="button" onClick={onDownload} className={styles.iconButton}>
                             <Download className={styles.icon} />
                         </button>
                     </Tooltip>
                 </>
-            )}
+            }
         >
             <textarea
                 className={styles.textarea}

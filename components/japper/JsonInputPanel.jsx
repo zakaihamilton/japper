@@ -1,18 +1,10 @@
+import { AlertCircle, FileJson, Filter, Loader2, Route, Trash2, Upload } from 'lucide-react';
 import { useRef, useState } from 'react';
-import {
-    FileJson,
-    Trash2,
-    AlertCircle,
-    Filter,
-    Upload,
-    Loader2,
-    Route,
-} from 'lucide-react';
 import { formatFileSize, formatResolvedPath } from '../../lib/japperUtils';
-import Tooltip from './Tooltip';
+import styles from './JsonInputPanel.module.css';
 import Panel from './Panel';
 import { usePanelGroup } from './PanelGroup';
-import styles from './JsonInputPanel.module.css';
+import Tooltip from './Tooltip';
 
 export default function JsonInputPanel({
     jsonInput,
@@ -68,7 +60,7 @@ export default function JsonInputPanel({
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
-            headerActions={(
+            headerActions={
                 <>
                     <button
                         type="button"
@@ -96,8 +88,8 @@ export default function JsonInputPanel({
                         }}
                     />
                 </>
-            )}
-            footer={(
+            }
+            footer={
                 <>
                     <div className={styles.stats}>
                         <span>{parsedDataCount} items detected</span>
@@ -141,7 +133,7 @@ export default function JsonInputPanel({
                         </button>
                     </div>
                 </>
-            )}
+            }
         >
             {inputSource === 'file' && loadedFile ? (
                 <div className={styles.fileSummaryWrap}>
@@ -152,17 +144,13 @@ export default function JsonInputPanel({
                                 {loadedFile.name}
                             </p>
                         </Tooltip>
-                        <p className={styles.fileSize}>
-                            {formatFileSize(loadedFile.size)}
-                        </p>
+                        <p className={styles.fileSize}>{formatFileSize(loadedFile.size)}</p>
                         {resolvedPath !== undefined && (
                             <p className={styles.filePath}>
                                 Path: {formatResolvedPath(resolvedPath)}
                             </p>
                         )}
-                        <p className={styles.fileItems}>
-                            {parsedDataCount} items loaded
-                        </p>
+                        <p className={styles.fileItems}>{parsedDataCount} items loaded</p>
                     </div>
                 </div>
             ) : (

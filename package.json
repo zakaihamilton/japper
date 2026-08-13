@@ -8,7 +8,13 @@
         "start": "next start",
         "lint": "biome check .",
         "lint:fix": "biome check --write .",
-        "format": "biome format --write ."
+        "format": "biome format --write .",
+        "health": "repnix check",
+        "health:dead-code": "knip",
+        "health:duplication": "jscpd app",
+        "health:architecture": "depcruise --output-type json --config -- app",
+        "health:licenses": "license-checker --json",
+        "health:documentation": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#playwright-report\" \"#test-results\" \"#coverage\" \"#dist\" \"#build\" \"#.next\" \"#.turbo\" \"#.git\" \"#generated\""
     },
     "dependencies": {
         "lucide-react": "^0.556.0",
@@ -21,6 +27,12 @@
         "@types/node": "^20",
         "@types/react": "^19",
         "@types/react-dom": "^19",
+        "dependency-cruiser": "^18.2.0",
+        "jscpd": "^5.0.14",
+        "knip": "^6.32.2",
+        "license-checker": "^25.0.1",
+        "markdownlint-cli2": "^0.23.2",
+        "repnix": "^0.3.7",
         "typescript": "^5"
     }
 }

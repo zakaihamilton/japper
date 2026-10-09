@@ -22,7 +22,7 @@
 }
 
 .actionButtonDanger {
-    color: #64748b;
+    color: #475569;
 }
 
 .actionButtonDanger:hover {
@@ -98,20 +98,20 @@
 
 .fileSize {
     font-size: 0.875rem;
-    color: #64748b;
+    color: #475569;
     margin: 0.25rem 0 0;
 }
 
 .filePath {
     font-size: 0.75rem;
-    color: #94a3b8;
+    color: #475569;
     margin: 0.5rem 0 0;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 .fileItems {
     font-size: 0.75rem;
-    color: #64748b;
+    color: #475569;
     margin: 0.75rem 0 0;
 }
 
@@ -190,7 +190,7 @@
 
 .stats {
     font-size: 0.75rem;
-    color: #64748b;
+    color: #475569;
     display: flex;
     justify-content: space-between;
 }
@@ -208,7 +208,7 @@
 .fieldIcon {
     width: 0.75rem;
     height: 0.75rem;
-    color: #94a3b8;
+    color: #475569;
     flex-shrink: 0;
 }
 
@@ -260,7 +260,7 @@
 
 .autoDetectHint {
     font-size: 0.75rem;
-    color: #94a3b8;
+    color: #475569;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     margin: 0;
 }

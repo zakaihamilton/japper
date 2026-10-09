@@ -18,5 +18,5 @@
     box-shadow: 0 4px 12px rgb(15 23 42 / 0.25);
     pointer-events: none;
     white-space: normal;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }

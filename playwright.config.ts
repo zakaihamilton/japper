@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://127.0.0.1:3111';
+const port = process.env.PLAYWRIGHT_PORT ?? '3111';
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${port}`;
 
 export default defineConfig({
     testDir: './tests/e2e',
@@ -13,9 +14,11 @@ export default defineConfig({
     use: { baseURL, trace: 'retain-on-failure', screenshot: 'only-on-failure' },
     projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
     webServer: {
-        command: 'yarn dev --webpack -H 127.0.0.1 -p 3111',
+        command: process.env.CI
+            ? `yarn start --hostname 127.0.0.1 --port ${port}`
+            : `yarn dev --webpack -H 127.0.0.1 -p ${port}`,
         url: baseURL,
         reuseExistingServer: !process.env.CI,
-        timeout: 120_000,
+        timeout: 60_000,
     },
 });

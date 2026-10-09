@@ -38,6 +38,7 @@ export default function OutputPanel({
                             type="button"
                             onClick={onCopy}
                             className={`${styles.iconButton} ${copied ? styles.iconButtonCopied : ''}`}
+                            aria-label={copied ? 'Copied output' : 'Copy output'}
                         >
                             {copied ? (
                                 <Check className={styles.icon} />
@@ -47,7 +48,12 @@ export default function OutputPanel({
                         </button>
                     </Tooltip>
                     <Tooltip content="Download">
-                        <button type="button" onClick={onDownload} className={styles.iconButton}>
+                        <button
+                            type="button"
+                            onClick={onDownload}
+                            className={styles.iconButton}
+                            aria-label="Download output"
+                        >
                             <Download className={styles.icon} />
                         </button>
                     </Tooltip>

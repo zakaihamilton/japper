@@ -6,7 +6,7 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "lint": "biome check .",
+        "lint": "biome check . && eslint .",
         "lint:fix": "biome check --write .",
         "format": "biome format --write .",
         "health": "repnix check",
@@ -14,7 +14,10 @@
         "health:duplication": "jscpd app",
         "health:architecture": "depcruise --output-type json --config -- app",
         "health:licenses": "license-checker --json",
-        "health:documentation": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#playwright-report\" \"#test-results\" \"#coverage\" \"#dist\" \"#build\" \"#.next\" \"#.turbo\" \"#.git\" \"#generated\""
+        "health:documentation": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#playwright-report\" \"#test-results\" \"#coverage\" \"#dist\" \"#build\" \"#.next\" \"#.turbo\" \"#.git\" \"#generated\"",
+        "health:a11y": "playwright test tests/e2e/guardrails.spec.ts --project=chromium",
+        "health:visual": "if [ \"$RUN_VISUAL_REGRESSION\" = \"1\" ] || [ \"$(uname)\" = \"Darwin\" ]; then playwright test tests/e2e/guardrails.spec.ts --project=chromium; else echo \"Visual regression runs in the macOS guardrail job.\"; fi",
+        "health:styles": "stylelint --formatter json \"**/*.{css,pcss,postcss}\""
     },
     "dependencies": {
         "lucide-react": "^0.556.0",
@@ -32,7 +35,14 @@
         "knip": "^6.32.2",
         "license-checker": "^25.0.1",
         "markdownlint-cli2": "^0.23.2",
-        "repnix": "^1.0.4",
-        "typescript": "^5"
+        "repnix": "^1.1.0",
+        "typescript": "^5",
+        "@axe-core/playwright": "^4.13.0",
+        "@playwright/test": "^1.63.0",
+        "eslint": "^9.39.5",
+        "eslint-plugin-jsx-a11y": "^6.10.2",
+        "stylelint": "^17.11.1",
+        "stylelint-config-standard": "^40.0.0",
+        "@typescript-eslint/parser": "^8.71.0"
     }
 }

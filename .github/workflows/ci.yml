@@ -9,24 +9,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - run: yarn install --ignore-scripts --non-interactive
-      - run: yarn build
-      - run: npx playwright install --with-deps chromium
-      - run: yarn health
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm health
 
   visual-regression:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - run: yarn install --ignore-scripts --non-interactive
-      - run: yarn build
-      - run: npx playwright install chromium
-      - run: yarn health:visual
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm build
+      - run: pnpm exec playwright install chromium
+      - run: pnpm health:visual
         env:
           RUN_VISUAL_REGRESSION: "1"

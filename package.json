@@ -1,5 +1,5 @@
 {
-  "packageManager": "pnpm@10.33.0",
+    "packageManager": "pnpm@10.33.0",
     "name": "japper",
     "version": "0.1.0",
     "private": true,
@@ -7,7 +7,7 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "lint": "biome check . && eslint .",
+        "lint": "biome check .",
         "lint:fix": "biome check --write .",
         "format": "biome format --write .",
         "health": "repnix check",
@@ -40,11 +40,8 @@
         "typescript": "^5",
         "@axe-core/playwright": "^4.13.0",
         "@playwright/test": "^1.63.0",
-        "eslint": "^9.39.5",
-        "eslint-plugin-jsx-a11y": "^6.10.2",
         "stylelint": "^17.11.1",
-        "stylelint-config-standard": "^40.0.0",
-        "@typescript-eslint/parser": "^8.71.0"
+        "stylelint-config-standard": "^40.0.0"
     },
     "engines": {
         "node": ">=24.0.0 <25"

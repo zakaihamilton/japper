@@ -11,10 +11,8 @@ import {
     useState,
 } from 'react';
 import styles from './PanelGroup.module.css';
+import { buildGridTemplate, computeResizeUpdates, getResizeTargets } from './panelGroupLayout';
 
-const COLLAPSED_WIDTH_PX = 44;
-const HANDLE_WIDTH_PX = 5;
-const MIN_PANEL_WIDTH_PX = 180;
 const DESKTOP_MEDIA_QUERY = '(min-width: 1024px)';
 
 const PanelGroupContext = createContext(null);
@@ -29,100 +27,6 @@ export function usePanelGroup(panelId) {
         isCollapsed: context.collapsedPanels[panelId] ?? false,
         toggleCollapse: () => context.togglePanel(panelId),
     };
-}
-
-function buildGridTemplate(containerWidth, columns, collapsedPanels, panelWidths) {
-    const panelCount = columns.length;
-    const handlesWidth = (panelCount - 1) * HANDLE_WIDTH_PX;
-    const available = containerWidth - handlesWidth;
-
-    const widths = columns.map((id, index) => {
-        if (collapsedPanels[id]) {
-            return COLLAPSED_WIDTH_PX;
-        }
-
-        return panelWidths[index] ?? null;
-    });
-
-    const expandedIndices = columns
-        .map((id, index) => (!collapsedPanels[id] ? index : -1))
-        .filter((index) => index >= 0);
-
-    const fixedWidth = widths.reduce((sum, width) => sum + (width ?? 0), 0);
-    const autoIndices = expandedIndices.filter((index) => widths[index] === null);
-
-    if (autoIndices.length > 0) {
-        const autoBudget = available - fixedWidth;
-        const share = autoBudget / autoIndices.length;
-        for (const index of autoIndices) {
-            widths[index] = Math.max(MIN_PANEL_WIDTH_PX, share);
-        }
-    }
-
-    let expandedWidth = expandedIndices.reduce((sum, index) => sum + widths[index], 0);
-    const collapsedWidth = widths.reduce(
-        (sum, width, index) => (collapsedPanels[columns[index]] ? sum + width : sum),
-        0,
-    );
-    const targetExpandedWidth = available - collapsedWidth;
-
-    if (expandedWidth > targetExpandedWidth) {
-        const scale = targetExpandedWidth / expandedWidth;
-        for (const index of expandedIndices) {
-            widths[index] = Math.max(MIN_PANEL_WIDTH_PX, widths[index] * scale);
-        }
-        expandedWidth = expandedIndices.reduce((sum, index) => sum + widths[index], 0);
-    }
-
-    const totalWidth = widths.reduce((sum, width) => sum + width, 0);
-    if (totalWidth < available && expandedIndices.length > 0) {
-        const lastExpanded = expandedIndices[expandedIndices.length - 1];
-        widths[lastExpanded] += available - totalWidth;
-    }
-
-    const parts = [];
-    for (let index = 0; index < panelCount; index += 1) {
-        parts.push(`${Math.round(widths[index])}px`);
-        if (index < panelCount - 1) {
-            parts.push(`${HANDLE_WIDTH_PX}px`);
-        }
-    }
-
-    return {
-        template: parts.join(' '),
-        widths,
-    };
-}
-
-function getResizeTargets(handleIndex, columns, collapsedPanels) {
-    const leftIndex = handleIndex;
-    const rightIndex = handleIndex + 1;
-    const leftCollapsed = collapsedPanels[columns[leftIndex]];
-    const rightCollapsed = collapsedPanels[columns[rightIndex]];
-
-    if (!leftCollapsed && !rightCollapsed) {
-        return { mode: 'pair', leftIndex, rightIndex };
-    }
-
-    if (leftCollapsed && !rightCollapsed) {
-        for (let index = leftIndex - 1; index >= 0; index -= 1) {
-            if (!collapsedPanels[columns[index]]) {
-                return { mode: 'pair', leftIndex: index, rightIndex };
-            }
-        }
-        return { mode: 'single', index: rightIndex, sign: -1 };
-    }
-
-    if (!leftCollapsed && rightCollapsed) {
-        for (let index = rightIndex + 1; index < columns.length; index += 1) {
-            if (!collapsedPanels[columns[index]]) {
-                return { mode: 'pair', leftIndex, rightIndex: index };
-            }
-        }
-        return { mode: 'single', index: leftIndex, sign: 1 };
-    }
-
-    return null;
 }
 
 function ResizeHandle({ disabled, isActive, collapsedAdjacent, onPointerDown }) {
@@ -220,46 +124,21 @@ export default function PanelGroup({ columns, children, className = '' }) {
                 return;
             }
 
-            const leftId = columns[dragState.handleIndex];
-            const rightId = columns[dragState.handleIndex + 1];
-
-            if (collapsedPanels[leftId] && collapsedPanels[rightId]) {
-                return;
-            }
-
             const resizeTargets = getResizeTargets(dragState.handleIndex, columns, collapsedPanels);
-            if (!resizeTargets) {
-                return;
-            }
-
-            const delta = event.clientX - dragState.startX;
-
-            if (resizeTargets.mode === 'single') {
-                const nextWidth =
-                    dragState.startWidths[resizeTargets.index] + resizeTargets.sign * delta;
-                if (nextWidth < MIN_PANEL_WIDTH_PX) {
-                    return;
-                }
-
-                setPanelWidths((prev) => {
-                    const next = [...prev];
-                    next[resizeTargets.index] = nextWidth;
-                    return next;
-                });
-                return;
-            }
-
-            const nextLeft = dragState.startWidths[resizeTargets.leftIndex] + delta;
-            const nextRight = dragState.startWidths[resizeTargets.rightIndex] - delta;
-
-            if (nextLeft < MIN_PANEL_WIDTH_PX || nextRight < MIN_PANEL_WIDTH_PX) {
+            const updates = computeResizeUpdates(
+                resizeTargets,
+                dragState.startWidths,
+                event.clientX - dragState.startX,
+            );
+            if (!updates) {
                 return;
             }
 
             setPanelWidths((prev) => {
                 const next = [...prev];
-                next[resizeTargets.leftIndex] = nextLeft;
-                next[resizeTargets.rightIndex] = nextRight;
+                for (const [index, width] of updates) {
+                    next[index] = width;
+                }
                 return next;
             });
         },

@@ -15,8 +15,8 @@ export default defineConfig({
     projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
     webServer: {
         command: process.env.CI
-            ? `yarn start --hostname 127.0.0.1 --port ${port}`
-            : `yarn dev --webpack -H 127.0.0.1 -p ${port}`,
+            ? `pnpm start --hostname 127.0.0.1 --port ${port}`
+            : `pnpm dev --webpack -H 127.0.0.1 -p ${port}`,
         url: baseURL,
         reuseExistingServer: !process.env.CI,
         timeout: 60_000,

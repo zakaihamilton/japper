@@ -7,7 +7,7 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "lint": "biome check .",
+        "lint": "biome check . && eslint --ext .ts,.tsx app components lib workers tests",
         "lint:fix": "biome check --write .",
         "format": "biome format --write .",
         "health": "repnix check",
@@ -27,21 +27,24 @@
         "react-dom": "^19.2.1"
     },
     "devDependencies": {
+        "@axe-core/playwright": "^4.13.0",
         "@biomejs/biome": "^2.5.2",
+        "@playwright/test": "^1.63.0",
         "@types/node": "^24",
         "@types/react": "^19",
         "@types/react-dom": "^19",
+        "@typescript-eslint/parser": "8.64.0",
         "dependency-cruiser": "^18.2.0",
+        "eslint": "9.39.5",
+        "eslint-plugin-jsx-a11y": "6.10.2",
         "jscpd": "^5.0.14",
         "knip": "^6.32.2",
         "license-checker": "^25.0.1",
         "markdownlint-cli2": "^0.23.2",
         "repnix": "^1.1.0",
-        "typescript": "^5",
-        "@axe-core/playwright": "^4.13.0",
-        "@playwright/test": "^1.63.0",
         "stylelint": "^17.11.1",
-        "stylelint-config-standard": "^40.0.0"
+        "stylelint-config-standard": "^40.0.0",
+        "typescript": "^5"
     },
     "engines": {
         "node": ">=24.0.0 <25"
